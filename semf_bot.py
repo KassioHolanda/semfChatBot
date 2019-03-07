@@ -2,7 +2,8 @@ import telebot
 import postgresql as psql
 from Conexao import *
 
-con2 = Conexao('pq://abdiasviana:Voljin!555@localhost/bot_telegram')
+con2 = Conexao('pq://postgres:sysadm@100.100.100.203/bot')
+#con2 = Conexao('pq://abdiasviana:Voljin!555@localhost/bot_telegram')
 con = Conexao('pq://readonly:123@100.100.100.203/poda_teste')
 #con = Conexao('pq://abdiasviana:Voljin!555@localhost/poda_teste')
 token = '695350005:AAHdicQ1IW-c359VOQFoO_wrKIDHWNV1iFo'
@@ -39,13 +40,15 @@ def echo_all(message):
         numCpf = message.text
         print(message.text)
         sql1 = "select nome from pessoa where cpf = '{0}'".format(numCpf)
-        sql2 = "select numerocompleto, status from requerimento r inner join pessoa p on r.pessoa_id = p.id where p.cpf = '{0}'".format(numCpf)
+        sql2 = "select r.coletapoda_id, r.numerocompleto, r.status from requerimento r inner join pessoa p on r.pessoa_id = p.id where p.cpf = '{0}'".format(numCpf)
         print(sql1)
         print(sql2)
         rs1 = con.consultar(sql1)
         for linha1 in rs1:
             bot.send_message(message.chat.id, 'Sr(a): {}'.format(linha1[0]))
         bot.send_message(message.chat.id, 'Requerimentos:')
+        bot.send_message(message.chat.id,  '.....................')
+        bot.send_message(message.chat.id, 'Nº --- Nº Requerimento --- Status')
         rs2 = con.consultar(sql2)
         for linha2 in rs2:
             bot.send_message(message.chat.id, '{}: {}'.format(contador, linha2))
@@ -67,13 +70,15 @@ def echo_all(message):
         numCnpj = message.text
         print(message.text)
         sql1 = "select nome from pessoa where cnpj = '{0}'".format(numCnpj)
-        sql2 = "select numerocompleto, status from requerimento r inner join pessoa p on r.pessoa_id = p.id where p.cnpj = '{}'".format(numCnpj)
+        sql2 = "select r.coletapoda_id, r.numerocompleto, r.status from requerimento r inner join pessoa p on r.pessoa_id = p.id where p.cnpj = '{}'".format(numCnpj)
         print(sql1)
         print(sql2)
         rs1 = con.consultar(sql1)
         for linha1 in rs1:
             bot.send_message(message.chat.id, 'Razão Social: {}'.format(linha1[0]))
         bot.send_message(message.chat.id, 'Requerimentos:')
+        bot.send_message(message.chat.id, '.....................')
+        bot.send_message(message.chat.id, 'Nº    Nº Requerimento    Status')
         rs2 = con.consultar(sql2)
         for linha2 in rs2:
             bot.send_message(message.chat.id, '{}: {}'.format(contador, linha2))
